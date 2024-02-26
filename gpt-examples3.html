@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>OpenAI Chatbot</title>
+    </head>
+
+    <body>
+        <h1>OpenAI Chatbot</h1>
+        <input type="text" id="userInput" placeholder="Enter your prompt">
+        <button onclick="askGPT()">Submit</button>
+        <div id="chatHistory"></div>
+
+        <script>
+            const apiKey = '';
+
+            let messages = [{ role: "system", content: 'You are a Python Helper. When the user asks questions about python, and you are to respond with a brief answer.' }];
+
+            async function askGPT()
+            {
+                const userPrompt = document.getElementById('userInput').value;
+                if (userPrompt === '')
+                {
+                    return;
+                }
+
+                messages = [...messages, { role: "user", content: userPrompt }];
+                try
+                {
+                    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${apiKey}`
+                        },
+                        body: JSON.stringify({
+                            model: "gpt-3.5-turbo",
+                            messages: messages
+                        })
+                    });
+
+                    const data = await response.json();
+                    const aiResponse = data.choices[0].message.content;
+                    messages = [...messages, { role: "assistant", content: aiResponse }];
+
+
+                    const chatHistory = document.getElementById('chatHistory');
+                    chatHistory.innerHTML = '';
+                    messages.forEach(msg =>
+                    {
+                        if (msg.role !== 'system')
+                        {
+                            const messageElement = document.createElement('div');
+                            messageElement.innerText = `${msg.role === 'user' ? 'You: ' : 'Bot: '}${msg.content}`;
+                            chatHistory.appendChild(messageElement);
+                        }
+                    });
+                } catch (err)
+                {
+                    console.log('Failed to send message', err);
+                }
+            }
+        </script>
+    </body>
+
+</html>

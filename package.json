@@ -1,0 +1,15 @@
+{
+  "name": "gptexampels",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dalle-example.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "openai": "^4.28.0",
+    "prompt-sync": "^4.2.0"
+  }
+}
